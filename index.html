@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CTF Flag Verification</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #1a1a40 0%, #2e1065 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Courier New', monospace;
+            color: #e5e7eb;
+        }
+        .glow {
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+        }
+        .hint-container {
+            display: none;
+        }
+        .hint-container.show {
+            display: block;
+        }
+        .success-message {
+            display: none;
+            animation: fadeIn 1s ease-in-out;
+        }
+        @keyframes fadeIn {
+            0% { opacity: 0; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="max-w-md w-full mx-4 p-8 bg-gray-900 rounded-xl shadow-2xl glow">
+        <h1 class="text-3xl font-bold text-center text-blue-400 mb-6">CTF Flag Verification</h1>
+        <p class="text-center text-gray-300 mb-4">Submit your flag to verify if you've captured the treasure!</p>
+        <div class="mb-6">
+            <input type="text" id="flagInput" placeholder="Enter flag (e.g., FLAG{...})" class="w-full p-3 bg-gray-800 text-white border border-blue-500 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400">
+        </div>
+        <button id="submitButton" class="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white font-bold rounded-lg hover:from-blue-600 hover:to-purple-700 transition duration-300 glow">Verify Flag</button>
+        <div id="result" class="mt-6 text-center"></div>
+        <div id="successMessage" class="success-message mt-6 text-center">
+            <h2 class="text-2xl font-bold text-green-400">Success!</h2>
+            <p class="text-lg text-gray-200">Correct Flag: <span class="font-mono text-green-400">FLAG{SSH_4CC3SS_GR4NT3D}</span></p>
+        </div>
+        <div class="mt-6">
+            <button id="hint1Button" class="w-full py-2 mb-2 bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 transition duration-200">Hint 1</button>
+            <div id="hint1Container" class="hint-container p-4 bg-gray-800 rounded-lg">
+                <p class="text-sm text-gray-300">Surface's clean, but the code's murky. Dive in.</p>
+            </div>
+            <button id="hint2Button" class="w-full py-2 mb-2 bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 transition duration-200">Hint 2</button>
+            <div id="hint2Container" class="hint-container p-4 bg-gray-800 rounded-lg">
+                <p class="text-sm text-gray-300">Hey... have you ever even touched a Panigale? Felt that raw power under your hands?</p>
+            </div>
+            <button id="hint3Button" class="w-full py-2 mb-2 bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 transition duration-200">Hint 3</button>
+            <div id="hint3Container" class="hint-container p-4 bg-gray-800 rounded-lg">
+                <p class="text-sm text-gray-300">Once you’re in, the real treasure is tucked away where secrets hide. Look for a place that’s out of sight in your home base, but beware—courses can lead you astray with tempting distractions!</p>
+            </div>
+        </div>
+    </div>
+    <script>
+        const correctFlag = "FLAG{SSH_4CC3SS_GR4NT3D}";
+        let incorrectAttempts = 0;
+
+        document.getElementById('submitButton').addEventListener('click', function() {
+            const inputFlag = document.getElementById('flagInput').value.trim();
+            const resultDiv = document.getElementById('result');
+            const successMessage = document.getElementById('successMessage');
+
+            if (inputFlag === correctFlag) {
+                resultDiv.innerHTML = '<p class="text-green-400">Congratulations! Flag verified!</p>';
+                successMessage.style.display = 'block';
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+                document.querySelectorAll('.hint-container').forEach(container => {
+                    container.classList.remove('show');
+                });
+            } else {
+                incorrectAttempts++;
+                resultDiv.innerHTML = '<p class="text-red-400">Incorrect flag. Try again!</p>';
+                successMessage.style.display = 'none';
+                if (incorrectAttempts >= 1) {
+                    document.getElementById('hint1Button').style.display = 'block';
+                    document.getElementById('hint1Container').classList.add('show');
+                }
+                if (incorrectAttempts >= 2) {
+                    document.getElementById('hint2Button').style.display = 'block';
+                    document.getElementById('hint2Container').classList.add('show');
+                }
+                if (incorrectAttempts >= 3) {
+                    document.getElementById('hint3Button').style.display = 'block';
+                    document.getElementById('hint3Container').classList.add('show');
+                }
+            }
+        });
+
+        // Toggle hint visibility
+        document.getElementById('hint1Button').addEventListener('click', function() {
+            document.getElementById('hint1Container').classList.toggle('show');
+        });
+        document.getElementById('hint2Button').addEventListener('click', function() {
+            document.getElementById('hint2Container').classList.toggle('show');
+        });
+        document.getElementById('hint3Button').addEventListener('click', function() {
+            document.getElementById('hint3Container').classList.toggle('show');
+        });
+    </script>
+</body>
+</html>
